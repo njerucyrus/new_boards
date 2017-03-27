@@ -19,7 +19,7 @@ use Entity\Order;
 class OrderController implements CrudInterface
 {
 
-    private  $order;
+    private $order;
 
     /**
      * OrderController constructor.
@@ -36,7 +36,45 @@ class OrderController implements CrudInterface
      */
     public function create()
     {
-        // TODO: Implement create() method.
+        global $conn;
+        try {
+            $orderNo = $this->order->getorderNo();
+            $boardId = $this->order->getBoardId();
+            $amount = $this->order->getAmount();
+            $status = $this->order->getStatus();
+            $date = $this->order->getDate();
+
+            $stmt = $conn->prepare("INSERT INTO orders
+                                                    (
+                                                        order_id, 
+                                                        board_id,
+                                                        amount,
+                                                        status,
+                                                        order_date
+                                                    )
+                                                    VALUES
+                                                    (
+                                                        :order_no,
+                                                        :board_id,
+                                                        :amount,
+                                                        :status,
+                                                        :order_date
+                                                    )");
+
+            $stmt->bindParam(':order_no', $orderNo);
+            $stmt->bindParam(':board_id', $boardId);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':order_date', $date);
+
+            $stmt->execute();
+            return true;
+
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return false;
+
+        }
     }
 
     /**
@@ -45,34 +83,107 @@ class OrderController implements CrudInterface
      */
     public function update($id)
     {
-        // TODO: Implement update() method.
+
+        global $conn;
+        try {
+
+
+            $boardId = $this->order->getBoardId();
+            $amount = $this->order->getAmount();
+            $status = $this->order->getStatus();
+            $date = $this->order->getDate();
+
+
+            $stmt = $conn->prepare("UPDATE orders SET 
+                                                    board_id=:board_id,
+                                                    amount=:amount,
+                                                    status=:status,
+                                                    order_date=:order_date
+                                                  WHERE
+                                                        id=:id
+                                                        ");
+
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':board_id', $boardId);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':order_date', $date);
+            $stmt->execute();
+            return true;
+        } catch (\PDOException $e) {
+             echo $e->getMessage();
+
+
+            return false;
+        }
     }
 
     /**
      * @param $id
-     * @return mixed
+     * @return bool
      */
     public static function delete($id)
     {
-        // TODO: Implement delete() method.
+        global $conn;
+        try{
+
+            $stmt = $conn->prepare("DELETE FROM orders WHERE id=:id");
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            return true;
+
+        } catch (\PDOException $e){
+            echo $e->getMessage();
+            return false;
+        }
     }
 
     /**
      * @return mixed
+     * this method deletes all the data from orders table.
+     * this used be called with caution!
      */
     public static function destroy()
     {
-        // TODO: Implement destroy() method.
+        global $conn;
+        try{
+
+            $stmt = $conn->prepare("DELETE FROM orders");
+
+            $stmt->execute();
+            return true;
+
+        } catch (\PDOException $e){
+            echo $e->getMessage();
+            return false;
+        }
     }
 
 
     /**
      * @param $id
-     * @return mixed
+     * @return array
      */
     public static function getId($id)
     {
-        // TODO: Implement getId() method.
+        global $conn;
+        try {
+            $stmt = $conn->prepare("SELECT * FROM orders WHERE id=:id");
+
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            $order = $stmt->rowCount() > 0 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+            return $order;
+
+        } catch (PDOException $e) {
+
+            echo $e->getMessage();
+            return [];
+
+        }
+
     }
 
     /**
@@ -80,7 +191,29 @@ class OrderController implements CrudInterface
      */
     public static function all()
     {
-        // TODO: Implement all() method.
+        global $conn;
+
+        try {
+
+            $stmt = $conn->prepare("SELECT * FROM orders WHERE 1");
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $orders = array();
+                while ($order = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($orders)) {
+                        $orders[] = $order;
+                    }
+                }
+                return $orders;
+            } else {
+                return [];
+            }
+
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return [];
+        }
     }
+
 
 }
