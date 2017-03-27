@@ -52,6 +52,24 @@ class OrderController implements CrudInterface
      * @param $id
      * @return mixed
      */
+    public static function delete($id)
+    {
+        // TODO: Implement delete() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function destroy()
+    {
+        // TODO: Implement destroy() method.
+    }
+
+
+    /**
+     * @param $id
+     * @return mixed
+     */
     public static function getId($id)
     {
         // TODO: Implement getId() method.

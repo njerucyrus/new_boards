@@ -34,18 +34,18 @@ interface CrudInterface
     public static function delete($id);
 
     /**
-     * @return mixed
+     * @return bool
      */
     public static function destroy();
 
     /**
      * @param $id
-     * @return mixed
+     * @return array
      */
     public static function getId($id);
 
     /**
-     * @return mixed
+     * @return array
      */
     public static function all();
 

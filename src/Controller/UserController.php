@@ -51,14 +51,28 @@ class UserController implements CrudInterface
         $password = $this->user->getPassword();
 
         try {
-            $stmt = $conn->prepare("INSERT INTO users(first_name, last_name,
-                                  email,phone_number, company,
-                                   account_type,username, password
-                                   )
-                                  VALUES (:first_name, :last_name,
-                                   :email,:phone_number, :company,
-                                   :account_type,:username, :password
-                                   )");
+            $stmt = $conn->prepare("INSERT INTO users(
+                                                        first_name,
+                                                        last_name,
+                                                        email,
+                                                        phone_number,
+                                                        company,
+                                                        account_type,
+                                                        username,
+                                                        password
+                                                      )
+                                                    VALUES
+                                                     (
+                                                        :first_name,
+                                                        :last_name,
+                                                        :email,
+                                                        :phone_number,
+                                                        :company,
+                                                        :account_type,
+                                                        :username,
+                                                        :password
+                                                    )");
+
 
             $stmt->bindParam(":first_name", $firstName);
             $stmt->bindParam(":last_name", $lastName);
@@ -102,7 +116,7 @@ class UserController implements CrudInterface
                                     company=:company,
                                     account_type=:account_type,
                                     username=:username,
-                                    password=:password
+                                    `password`=:password
                                     WHERE 
                                     id=:id"
             );
@@ -134,12 +148,12 @@ class UserController implements CrudInterface
     public static function delete($id)
     {
         global $conn;
-        try{
+        try {
             $stmt = $conn->prepare("DELETE FROM users WHERE id=:id");
             $stmt->bindParam(":id", $id);
             $stmt->execute();
             return true;
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
         }
@@ -153,12 +167,12 @@ class UserController implements CrudInterface
     public static function destroy()
     {
         global $conn;
-        try{
+        try {
             $stmt = $conn->prepare("DELETE FROM users");
             $stmt->execute();
             return true;
 
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
         }
@@ -196,22 +210,23 @@ class UserController implements CrudInterface
     {
         global $conn;
 
-        try{
+        try {
 
             $stmt = $conn->prepare("SELECT * FROM users WHERE 1");
             $stmt->execute();
-            if ($stmt->rowCount()> 0){
+            if ($stmt->rowCount() > 0) {
                 $users = array();
-                while ($user = $stmt->fetch(\PDO::FETCH_ASSOC)){
-                    $users[] = $user;
+                while ($user = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($users)) {
+                        $users[] = $user;
+                    }
                 }
                 return $users;
-            }
-            else{
+            } else {
                 return [];
             }
 
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return [];
         }
