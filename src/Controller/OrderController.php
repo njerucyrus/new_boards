@@ -203,7 +203,7 @@ class OrderController implements CrudInterface
             if ($stmt->rowCount() > 0) {
                 $orders = array();
                 while ($order = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($orders)) {
+                    if (!empty($order)) {
                         $orders[] = $order;
                     }
                 }

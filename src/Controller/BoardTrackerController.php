@@ -191,7 +191,7 @@ class BoardTrackerController implements CrudInterface
             if ($stmt->rowCount() > 0) {
                 $board_trackers = array();
                 while ($board_tracker= $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($board_trackers)) {
+                    if (!empty($board_tracker)) {
                         $board_trackers[] = $board_tracker;
                     }
                 }

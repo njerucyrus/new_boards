@@ -248,7 +248,7 @@ class BoardController implements CrudInterface
             if ($stmt->rowCount() > 0) {
                 $boards = array();
                 while ($board = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($boards)) {
+                    if (!empty($board)) {
                         $boards[] = $board;
                     }
                 }

@@ -18,7 +18,7 @@ class DBConnect
     /**
      * @var string
      */
-    private $databaseName = 'api_db';
+    private $databaseName = 'billboard';
     /**
      * @var string
      */

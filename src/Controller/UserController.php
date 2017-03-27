@@ -8,11 +8,10 @@
 
 namespace Controller;
 
-require_once __DIR__ . '/../DBManager/DBConnect.php';
-
 require_once __DIR__.'/../AppInterface/CrudInterface.php';
 require_once __DIR__.'/../Entity/User.php';
 require_once __DIR__.'/../DBManager/DBConnect.php';
+
 use AppInterface\CrudInterface;
 use Entity\User;
 
@@ -219,9 +218,10 @@ class UserController implements CrudInterface
             if ($stmt->rowCount() > 0) {
                 $users = array();
                 while ($user = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($users)) {
-                        $users[] = $user;
-                    }
+                       if (!empty($user)) {
+                           $users[] = $user;
+                       }
+
                 }
                 return $users;
             } else {
