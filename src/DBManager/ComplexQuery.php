@@ -9,8 +9,6 @@
 namespace DBManager;
 
 
-use Doctrine\DBAL\Driver\PDOException;
-
 class ComplexQuery
 {
 

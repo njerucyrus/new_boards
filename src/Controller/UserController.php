@@ -11,15 +11,17 @@ namespace Controller;
 require_once __DIR__.'/../AppInterface/CrudInterface.php';
 require_once __DIR__.'/../Entity/User.php';
 require_once __DIR__.'/../DBManager/DBConnect.php';
+require_once __DIR__.'/../DBManager/ComplexQuery.php';
 
 use AppInterface\CrudInterface;
 use Entity\User;
+use DBManager\ComplexQuery;
 
 /**
  * Class UserController
  * @package Controller
  */
-class UserController implements CrudInterface
+class UserController extends ComplexQuery implements CrudInterface
 {
     /**
      * @var User

@@ -11,15 +11,17 @@ namespace Controller;
 require_once __DIR__.'/../AppInterface/CrudInterface.php';
 require_once __DIR__.'/../Entity/Order.php';
 require_once __DIR__.'/../DBManager/DBConnect.php';
+require_once __DIR__.'/../DBManager/ComplexQuery.php';
 
 use AppInterface\CrudInterface;
 use Entity\Order;
+use DBManager\ComplexQuery;
 
 /**
  * Class OrderController
  * @package Controller
  */
-class OrderController implements CrudInterface
+class OrderController extends ComplexQuery implements CrudInterface
 {
 
     private $order;

@@ -11,14 +11,16 @@ namespace Controller;
 require_once __DIR__.'/../AppInterface/CrudInterface.php';
 require_once __DIR__.'/../Entity/BoardTracker.php';
 require_once __DIR__.'/../DBManager/DBConnect.php';
+require_once __DIR__.'/../DBManager/ComplexQuery.php';
 use AppInterface\CrudInterface;
 use Entity\BoardTracker;
+use DBManager\ComplexQuery;
 
 /**
  * Class BoardTrackerController
  * @package Controller
  */
-class BoardTrackerController implements CrudInterface
+class BoardTrackerController extends ComplexQuery implements CrudInterface
 {
 
     /**
