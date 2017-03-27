@@ -8,6 +8,9 @@
 
 namespace Controller;
 
+require_once __DIR__.'/../AppInterface/CrudInterface.php';
+require_once __DIR__.'/../Entity/Board.php';
+require_once __DIR__.'/../DBManager/DBConnect.php';
 use AppInterface\CrudInterface;
 use Doctrine\DBAL\Driver\PDOException;
 use Entity\Board;

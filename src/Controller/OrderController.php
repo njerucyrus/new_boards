@@ -8,6 +8,9 @@
 
 namespace Controller;
 
+require_once __DIR__.'/../AppInterface/CrudInterface.php';
+require_once __DIR__.'/../Entity/Order.php';
+require_once __DIR__.'/../DBManager/DBConnect.php';
 
 use AppInterface\CrudInterface;
 use Entity\Order;
@@ -177,7 +180,7 @@ class OrderController implements CrudInterface
             $order = $stmt->rowCount() > 0 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
             return $order;
 
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
 
             echo $e->getMessage();
             return [];
@@ -214,6 +217,7 @@ class OrderController implements CrudInterface
             return [];
         }
     }
+
 
 
 }
