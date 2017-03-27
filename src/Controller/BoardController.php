@@ -11,15 +11,16 @@ namespace Controller;
 require_once __DIR__.'/../AppInterface/CrudInterface.php';
 require_once __DIR__.'/../Entity/Board.php';
 require_once __DIR__.'/../DBManager/DBConnect.php';
+require_once __DIR__.'/../DBManager/ComplexQuery.php';
 use AppInterface\CrudInterface;
-use Doctrine\DBAL\Driver\PDOException;
+use DBManager\ComplexQuery;
 use Entity\Board;
 
 /**
  * Class BoardController
  * @package Controller
  */
-class BoardController implements CrudInterface
+class BoardController extends ComplexQuery implements CrudInterface
 {
     /**
      * @var Board
