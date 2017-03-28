@@ -210,13 +210,16 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
                 $board_trackers = array();
                 while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                     if (!empty($row)) {
-                        $board_trackers = array(
+                        $board_tracker = array(
                             "id" => $row['id'],
                             "board_code" => $row['board_code'],
                             "customer" => $row['customer'],
                             "date_booked" => $row['date_booked'],
                             "expiry_date" => $row['expiry_date']
                         );
+
+                        $board_trackers[] = $board_tracker;
+
                     }
                 }
 

@@ -224,7 +224,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                 $orders = array();
                 while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                     if (!empty($row)) {
-                        $orders = array(
+                        $order = array(
                             "id" => $row['id'],
                             "order_no" => $row['order_no'],
                             "board_id" => $row['board_id'],
@@ -232,6 +232,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                             "status" => $row['status'],
                             "order_date" => $row['order_date']
                         );
+                        $orders[] = $order;
                     }
                 }
                 $db->closeConnection();

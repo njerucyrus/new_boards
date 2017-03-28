@@ -236,7 +236,7 @@ class UserController extends ComplexQuery implements CrudInterface
                 $users = array();
                 while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                     if (!empty($row)) {
-                        $users = array(
+                        $user = array(
                             "id" => $row['id'],
                             "username" => $row['username'],
                             "first_name" => $row['first_name'],
@@ -246,6 +246,7 @@ class UserController extends ComplexQuery implements CrudInterface
                             "company" => $row['company'],
                             "account_type" => $row['account_type']
                         );
+                        $users[] = $user;
                     }
 
                 }

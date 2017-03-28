@@ -69,14 +69,19 @@ class FormGenerator
     public function makeForm(){
         $fields = $this->getFields();
         $html_form = '';
+        $form_begin = '<form>';
+        $form_end = '</form>';
+        $html_form .= $form_begin;
         foreach ($fields as $field){
+
             $html_form .='<lable>'.$field['name'].'</lable>:<input type="text" '.$field['required'].'><br><br>';
         }
+        $html_form .=$form_end;
         return $html_form;
     }
 
 }
 
-$form = new FormGenerator('boards');
+$form = new FormGenerator('orders');
 echo $form->makeForm();
 

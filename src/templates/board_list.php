@@ -52,7 +52,7 @@
                                     <div class="col col-md-8">
                                         <div class="panel" style="background-color: rgba(0,0,0,0.14)">
                                             <div class="panel-heading">
-                                                <h4 style="color: rgba(235,69,3,0.93);"> <?php echo $board['town'] ?>
+                                                <h4 style="color: rgba(235,69,3,0.93);"> <?php echo $board["town"] ?>
                                                     (<?php echo $board['location'] ?>)</h4>
                                             </div>
                                             <div class="panel-body">

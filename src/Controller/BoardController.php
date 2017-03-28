@@ -5,8 +5,8 @@
  * Date: 3/27/17
  * Time: 10:40 PM
  */
-
 namespace Controller;
+
 
 require_once __DIR__ . '/../AppInterface/CrudInterface.php';
 require_once __DIR__ . '/../Entity/Board.php';
@@ -278,13 +278,13 @@ class BoardController extends ComplexQuery implements CrudInterface
                 $boards = array();
                 while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                     if (!empty($row)) {
-                        $boards = array(
+                        $board = array(
                             "id" => $row['id'],
                             "board_code" => $row['board_code'],
                             "width" => $row['width'],
                             "height" => $row['height'],
                             "lat" => $row['lat'],
-                            "lgn" => $row['lng'],
+                            "lgn" => $row['lgn'],
                             "town" => $row['town'],
                             "location" => $row['location'],
                             "board_type" => $row['board_type'],
@@ -294,6 +294,7 @@ class BoardController extends ComplexQuery implements CrudInterface
                             "weekly_impressions" => $row['weekly_impressions'],
                             "image" => "image"
                         );
+                        $boards[]=$board;
                     }
                 }
                 $db->closeConnection();
