@@ -8,10 +8,10 @@
 
 namespace Controller;
 
-require_once __DIR__.'/../AppInterface/CrudInterface.php';
-require_once __DIR__.'/../Entity/Board.php';
-require_once __DIR__.'/../DBManager/DBConnect.php';
-require_once __DIR__.'/../DBManager/ComplexQuery.php';
+require_once __DIR__ . '/../AppInterface/CrudInterface.php';
+require_once __DIR__ . '/../Entity/Board.php';
+require_once __DIR__ . '/../DBManager/DBConnect.php';
+require_once __DIR__ . '/../DBManager/ComplexQuery.php';
 use AppInterface\CrudInterface;
 use DBManager\ComplexQuery;
 use Entity\Board;
@@ -41,7 +41,7 @@ class BoardController extends ComplexQuery implements CrudInterface
      */
     public function create()
     {
-        global $conn;
+        global $db, $conn;
         $boardCode = $this->board->getBoardCode();
         $width = $this->board->getWidth();
         $height = $this->board->getHeight();
@@ -102,8 +102,8 @@ class BoardController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":weekly_impressions", $weeklyImpressions);
             $stmt->bindParam(":location", $location);
             $stmt->bindParam(":seen_by", $seenBy);
-
             $stmt->execute();
+            $db->closeConnection();
             return true;
         } catch (\PDOException $e) {
             return false;
@@ -118,7 +118,7 @@ class BoardController extends ComplexQuery implements CrudInterface
      */
     public function update($id)
     {
-        global $conn;
+        global $db, $conn;
 
         $boardCode = $this->board->getBoardCode();
         $width = $this->board->getWidth();
@@ -166,10 +166,13 @@ class BoardController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":weekly_impressions", $weeklyImpressions);
             $stmt->bindParam(":location", $location);
             $stmt->bindParam(":seen_by", $seenBy);
+
             $stmt->execute();
+            $db->closeConnection();
             return true;
         } catch (\PDOException $e) {
             echo $e->getMessage();
+            return false;
         }
     }
 
@@ -179,16 +182,17 @@ class BoardController extends ComplexQuery implements CrudInterface
      */
     public static function delete($id)
     {
-        global $conn;
+        global $db, $conn;
 
-        try{
+        try {
 
             $stmt = $conn->prepare("DELETE FROM boards WHERE id=:id");
             $stmt->bindParam(":id", $id);
             $stmt->execute();
+            $db->closeConnection();
             return true;
 
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
         }
@@ -200,15 +204,17 @@ class BoardController extends ComplexQuery implements CrudInterface
      */
     public static function destroy()
     {
-        global $conn;
+        global $db, $conn;
 
-        try{
+        try {
 
             $stmt = $conn->prepare("DELETE FROM boards");
             $stmt->execute();
+
+            $db->closeConnection();
             return true;
 
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
         }
@@ -220,16 +226,37 @@ class BoardController extends ComplexQuery implements CrudInterface
      */
     public static function getId($id)
     {
-        global $conn;
+        global $conn, $db;
         try {
 
             $stmt = $conn->prepare("SELECT * FROM boards WHERE id=:id");
             $stmt->bindParam(":id", $id);
             $stmt->execute();
+            $board = array();
+            if ($stmt->rowCount() > 0) {
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $board = array(
+                    "id" => $row['id'],
+                    "board_code" => $row['board_code'],
+                    "width" => $row['width'],
+                    "height" => $row['height'],
+                    "lat" => $row['lat'],
+                    "lgn" => $row['lng'],
+                    "town" => $row['town'],
+                    "location" => $row['location'],
+                    "board_type" => $row['board_type'],
+                    "price" => $row['price'],
+                    "owned_by" => $row['owned_by'],
+                    "seen_by" => $row['seen_by'],
+                    "weekly_impressions" => $row['weekly_impressions'],
+                    "image" => "image"
+                );
 
-            $board = $stmt->rowCount() > 0 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+            }
+            $db->closeConnection();
             return $board;
-        } catch (PDOException $e) {
+
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return [];
         }
@@ -240,7 +267,8 @@ class BoardController extends ComplexQuery implements CrudInterface
      */
     public static function all()
     {
-        global $conn;
+        global $db, $conn;
+
 
         try {
 
@@ -248,20 +276,40 @@ class BoardController extends ComplexQuery implements CrudInterface
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $boards = array();
-                while ($board = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($board)) {
-                        $boards[] = $board;
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($row)) {
+                        $boards = array(
+                            "id" => $row['id'],
+                            "board_code" => $row['board_code'],
+                            "width" => $row['width'],
+                            "height" => $row['height'],
+                            "lat" => $row['lat'],
+                            "lgn" => $row['lng'],
+                            "town" => $row['town'],
+                            "location" => $row['location'],
+                            "board_type" => $row['board_type'],
+                            "price" => $row['price'],
+                            "owned_by" => $row['owned_by'],
+                            "seen_by" => $row['seen_by'],
+                            "weekly_impressions" => $row['weekly_impressions'],
+                            "image" => "image"
+                        );
                     }
                 }
+                $db->closeConnection();
                 return $boards;
+
+
             } else {
                 return [];
             }
+
 
         } catch (\PDOException $e) {
             echo $e->getMessage();
             return [];
         }
+
     }
 
 }

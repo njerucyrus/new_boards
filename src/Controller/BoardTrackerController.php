@@ -8,10 +8,10 @@
 
 namespace Controller;
 
-require_once __DIR__.'/../AppInterface/CrudInterface.php';
-require_once __DIR__.'/../Entity/BoardTracker.php';
-require_once __DIR__.'/../DBManager/DBConnect.php';
-require_once __DIR__.'/../DBManager/ComplexQuery.php';
+require_once __DIR__ . '/../AppInterface/CrudInterface.php';
+require_once __DIR__ . '/../Entity/BoardTracker.php';
+require_once __DIR__ . '/../DBManager/DBConnect.php';
+require_once __DIR__ . '/../DBManager/ComplexQuery.php';
 use AppInterface\CrudInterface;
 use Entity\BoardTracker;
 use DBManager\ComplexQuery;
@@ -27,6 +27,7 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      * @var BoardTracker
      */
     private $boardTracker;
+
     /**
      * BoardTrackerController constructor.
      * @param BoardTracker $boardTracker
@@ -41,10 +42,10 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      */
     public function create()
     {
-        global $conn;
+        global $db, $conn;
         try {
             $boardCode = $this->boardTracker->getBoardCode();
-            $customer =  $this->boardTracker->getCustomer();
+            $customer = $this->boardTracker->getCustomer();
             $dateBooked = $this->boardTracker->getDateBooked();
             $expiryDate = $this->boardTracker->getExpiryDate();
 
@@ -70,6 +71,7 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":expiry_date", $expiryDate);
 
             $stmt->execute();
+            $db->closeConnection();
             return true;
 
         } catch (\PDOException $e) {
@@ -85,10 +87,10 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      */
     public function update($id)
     {
-        global $conn;
+        global $db, $conn;
         try {
             $boardCode = $this->boardTracker->getBoardCode();
-            $customer =  $this->boardTracker->getCustomer();
+            $customer = $this->boardTracker->getCustomer();
             $dateBooked = $this->boardTracker->getDateBooked();
             $expiryDate = $this->boardTracker->getExpiryDate();
 
@@ -106,6 +108,7 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":expiry_date", $expiryDate);
 
             $stmt->execute();
+            $db->closeConnection();
             return true;
 
         } catch (\PDOException $e) {
@@ -123,17 +126,19 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      */
     public static function delete($id)
     {
-        global $conn;
+        global $db, $conn;
         try {
 
             $stmt = $conn->prepare("DELETE FROM board_tracker WHERE id=:id");
 
             $stmt->bindParam(":id", $id);
             $stmt->execute();
+            $db->closeConnection();
+
             return true;
-        } catch (PDOException $e) {
-          echo $e->getMessage();
-          return false;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return false;
         }
 
     }
@@ -143,13 +148,14 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      */
     public static function destroy()
     {
-        global $conn;
+        global $db, $conn;
         try {
 
             $stmt = $conn->prepare("DELETE FROM board_tracker");
             $stmt->execute();
+            $db->closeConnection();
             return true;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
         }
@@ -162,13 +168,23 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      */
     public static function getId($id)
     {
-        global $conn;
+        global $db, $conn;
         try {
             $stmt = $conn->prepare("SELECT * FROM board_tracker WHERE id=:id");
             $stmt->bindParam(":id", $id);
             $stmt->execute();
-
-            $board_tracker = $stmt->rowCount() > 0 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+            $board_tracker = array();
+            if ($stmt->rowCount() > 0) {
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $board_tracker = array(
+                    "id" => $row['id'],
+                    "board_code" => $row['board_code'],
+                    "customer" => $row['customer'],
+                    "date_booked" => $row['date_booked'],
+                    "expiry_date" => $row['expiry_date']
+                );
+            }
+            $db->closeConnection();
             return $board_tracker;
 
         } catch (\PDOException $e) {
@@ -184,7 +200,7 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
      */
     public static function all()
     {
-        global $conn;
+        global $db, $conn;
 
         try {
 
@@ -192,11 +208,20 @@ class BoardTrackerController extends ComplexQuery implements CrudInterface
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $board_trackers = array();
-                while ($board_tracker= $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($board_tracker)) {
-                        $board_trackers[] = $board_tracker;
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($row)) {
+                        $board_trackers = array(
+                            "id" => $row['id'],
+                            "board_code" => $row['board_code'],
+                            "customer" => $row['customer'],
+                            "date_booked" => $row['date_booked'],
+                            "expiry_date" => $row['expiry_date']
+                        );
                     }
                 }
+
+                $db->closeConnection();
+
                 return $board_trackers;
             } else {
                 return [];

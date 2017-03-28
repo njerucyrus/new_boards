@@ -41,7 +41,7 @@ class OrderController extends ComplexQuery implements CrudInterface
      */
     public function create()
     {
-        global $conn;
+        global $db, $conn;
         try {
             $orderNo = $this->order->getorderNo();
             $boardId = $this->order->getBoardId();
@@ -73,6 +73,7 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(':order_date', $date);
 
             $stmt->execute();
+            $db->closeConnection();
             return true;
 
         } catch (\PDOException $e) {
@@ -89,7 +90,7 @@ class OrderController extends ComplexQuery implements CrudInterface
     public function update($id)
     {
 
-        global $conn;
+        global $db, $conn;
         try {
 
 
@@ -114,6 +115,7 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(':status', $status);
             $stmt->bindParam(':order_date', $date);
             $stmt->execute();
+            $db->closeConnection();
             return true;
         } catch (\PDOException $e) {
              echo $e->getMessage();
@@ -129,13 +131,14 @@ class OrderController extends ComplexQuery implements CrudInterface
      */
     public static function delete($id)
     {
-        global $conn;
+        global $db, $conn;
         try{
 
             $stmt = $conn->prepare("DELETE FROM orders WHERE id=:id");
             $stmt->bindParam(":id", $id);
             $stmt->execute();
 
+            $db->closeConnection();
             return true;
 
         } catch (\PDOException $e){
@@ -151,12 +154,13 @@ class OrderController extends ComplexQuery implements CrudInterface
      */
     public static function destroy()
     {
-        global $conn;
+        global $db, $conn;
         try{
 
             $stmt = $conn->prepare("DELETE FROM orders");
 
             $stmt->execute();
+            $db->closeConnection();
             return true;
 
         } catch (\PDOException $e){
@@ -172,14 +176,28 @@ class OrderController extends ComplexQuery implements CrudInterface
      */
     public static function getId($id)
     {
-        global $conn;
+        global $db, $conn;
         try {
             $stmt = $conn->prepare("SELECT * FROM orders WHERE id=:id");
 
             $stmt->bindParam(":id", $id);
             $stmt->execute();
 
-            $order = $stmt->rowCount() > 0 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+            $order = array();
+            if($stmt->rowCount() == 1){
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                $order = array(
+                    "id" => $row['id'],
+                    "order_no" => $row['order_no'],
+                    "board_id" => $row['board_id'],
+                    "amount" => $row['amount'],
+                    "status" => $row['status'],
+                    "order_date" => $row['order_date']
+                );
+
+            }
+            $db->closeConnection();
             return $order;
 
         } catch (\PDOException $e) {
@@ -196,7 +214,7 @@ class OrderController extends ComplexQuery implements CrudInterface
      */
     public static function all()
     {
-        global $conn;
+        global $db, $conn;
 
         try {
 
@@ -204,11 +222,19 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $orders = array();
-                while ($order = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    if (!empty($order)) {
-                        $orders[] = $order;
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($row)) {
+                        $orders = array(
+                            "id" => $row['id'],
+                            "order_no" => $row['order_no'],
+                            "board_id" => $row['board_id'],
+                            "amount" => $row['amount'],
+                            "status" => $row['status'],
+                            "order_date" => $row['order_date']
+                        );
                     }
                 }
+                $db->closeConnection();
                 return $orders;
             } else {
                 return [];
@@ -219,7 +245,5 @@ class OrderController extends ComplexQuery implements CrudInterface
             return [];
         }
     }
-
-
 
 }

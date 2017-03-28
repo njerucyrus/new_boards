@@ -8,10 +8,10 @@
 
 namespace Controller;
 
-require_once __DIR__.'/../AppInterface/CrudInterface.php';
-require_once __DIR__.'/../Entity/User.php';
-require_once __DIR__.'/../DBManager/DBConnect.php';
-require_once __DIR__.'/../DBManager/ComplexQuery.php';
+require_once __DIR__ . '/../AppInterface/CrudInterface.php';
+require_once __DIR__ . '/../Entity/User.php';
+require_once __DIR__ . '/../DBManager/DBConnect.php';
+require_once __DIR__ . '/../DBManager/ComplexQuery.php';
 
 use AppInterface\CrudInterface;
 use Entity\User;
@@ -188,7 +188,7 @@ class UserController extends ComplexQuery implements CrudInterface
      */
     public static function getId($id)
     {
-        global $conn;
+        global $db, $conn;
 
         try {
 
@@ -196,7 +196,22 @@ class UserController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":id", $id);
             $stmt->execute();
 
-            $user = $stmt->rowCount() == 1 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+            $user = array();
+            if ($stmt->rowCount() > 0) {
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $user = array(
+                    "id" => $row['id'],
+                    "username" => $row['username'],
+                    "first_name" => $row['first_name'],
+                    "last_name" => $row['last_name'],
+                    "email" => $row['email'],
+                    "phone_number" => $row['phone_number'],
+                    "company" => $row['company'],
+                    "account_type" => $row['account_type']
+                );
+
+            }
+            $db->closeConnection();
             return $user;
 
         } catch (\PDOException $e) {
@@ -211,7 +226,7 @@ class UserController extends ComplexQuery implements CrudInterface
      */
     public static function all()
     {
-        global $conn;
+        global $db, $conn;
 
         try {
 
@@ -219,12 +234,23 @@ class UserController extends ComplexQuery implements CrudInterface
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $users = array();
-                while ($user = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                       if (!empty($user)) {
-                           $users[] = $user;
-                       }
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($user)) {
+                        $users = array(
+                            "id" => $row['id'],
+                            "username" => $row['username'],
+                            "first_name" => $row['first_name'],
+                            "last_name" => $row['last_name'],
+                            "email" => $row['email'],
+                            "phone_number" => $row['phone_number'],
+                            "company" => $row['company'],
+                            "account_type" => $row['account_type']
+                        );
+                    }
 
                 }
+
+                $db->closeConnection();
                 return $users;
             } else {
                 return [];
