@@ -6,6 +6,6 @@
  * Time: 1:16 AM
  */
 
-require_once __DIR__ . '/../Controller/OrderController.php';
+require_once __DIR__ . '/../App/Controller/OrderController.php';
 
 print_r(\Controller\OrderController::all());
