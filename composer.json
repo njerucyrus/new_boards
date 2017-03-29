@@ -1,0 +1,10 @@
+{
+  "autoload":{
+    "psr-4": {
+      "App\\":"src/App/"
+    }
+  },
+  "require": {
+    "nesbot/carbon": "~1.18"
+  }
+}
