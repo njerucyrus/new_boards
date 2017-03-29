@@ -52,6 +52,7 @@ class BoardController extends ComplexQuery implements CrudInterface
         $image = $this->board->getImage();
         $seenBy = $this->board->getSeenBy();
         $weeklyImpressions = $this->board->getWeeklyImpression();
+        $boardStatus = $this->board->getBoardStatus();
 
         try {
             $stmt = $conn->prepare("INSERT INTO boards(
@@ -67,7 +68,8 @@ class BoardController extends ComplexQuery implements CrudInterface
                                                     price,
                                                     owned_by,
                                                     image,
-                                                    weekly_impressions
+                                                    weekly_impressions,
+                                                    board_status
                                                   )
                                             VALUES(
                                                     :board_code,
@@ -82,7 +84,8 @@ class BoardController extends ComplexQuery implements CrudInterface
                                                     :price,
                                                     :owned_by,
                                                     :image,
-                                                    :weekly_impressions
+                                                    :weekly_impressions,
+                                                    :board_status
                                                     )
                                             ");
 
@@ -99,6 +102,7 @@ class BoardController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":weekly_impressions", $weeklyImpressions);
             $stmt->bindParam(":location", $location);
             $stmt->bindParam(":seen_by", $seenBy);
+            $stmt->bindParam(":board_status", $boardStatus);
             $stmt->execute();
             $db->closeConnection();
             return true;
@@ -130,6 +134,8 @@ class BoardController extends ComplexQuery implements CrudInterface
         $image = $this->board->getImage();
         $seenBy = $this->board->getSeenBy();
         $weeklyImpressions = $this->board->getWeeklyImpression();
+        $boardStatus = $this->board->getBoardStatus();
+
 
         try {
             $stmt = $conn->prepare("UPDATE boards SET
@@ -145,7 +151,8 @@ class BoardController extends ComplexQuery implements CrudInterface
                                                 image=:image,
                                                 weekly_impressions=:weekly_impressions, 
                                                 location=:location,
-                                                seen_by=:seen_by
+                                                seen_by=:seen_by,
+                                                board_status=:board_status     
                                                 WHERE 
                                                 id=:id");
 
@@ -163,6 +170,7 @@ class BoardController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(":weekly_impressions", $weeklyImpressions);
             $stmt->bindParam(":location", $location);
             $stmt->bindParam(":seen_by", $seenBy);
+            $stmt->bindParam(":board_status", $boardStatus);
 
             $stmt->execute();
             $db->closeConnection();
@@ -246,7 +254,8 @@ class BoardController extends ComplexQuery implements CrudInterface
                     "owned_by" => $row['owned_by'],
                     "seen_by" => $row['seen_by'],
                     "weekly_impressions" => $row['weekly_impressions'],
-                    "image" => "image"
+                    "image" => $row['image'],
+                    "board_status" => $row['board_status']
                 );
 
             }
@@ -289,7 +298,8 @@ class BoardController extends ComplexQuery implements CrudInterface
                             "owned_by" => $row['owned_by'],
                             "seen_by" => $row['seen_by'],
                             "weekly_impressions" => $row['weekly_impressions'],
-                            "image" => "image"
+                            "image" => $row['image'],
+                            "board_status" => $row['board_status']
                         );
                         $boards[]=$board;
                     }

@@ -14,5 +14,9 @@ require_once __DIR__.'/../../../vendor/autoload.php';
 $b = new App\Controller\BoardController(new App\Entity\Board());
 
 $table = "boards";
+$options = array(
+    "location"=>"stage"
 
-print_r($b->customFilter($table,[], []));
+);
+
+print_r($b->customFilter($table,[], $options));

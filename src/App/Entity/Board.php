@@ -66,6 +66,11 @@ class Board
     private $weeklyImpression;
 
     /**
+     * @var string
+     */
+    private $boardStatus;
+
+    /**
      * @return string
      */
     public function getBoardCode()
@@ -242,7 +247,7 @@ class Board
     }
 
     /**
-     * @return file
+     * @return string
      */
     public function getImage()
     {
@@ -250,7 +255,7 @@ class Board
     }
 
     /**
-     * @param file $image
+     * @param string $image
      */
     public function setImage($image)
     {
@@ -273,5 +278,20 @@ class Board
         $this->weeklyImpression = $weeklyImpression;
     }
 
+    /**
+     * @return string
+     */
+    public function getBoardStatus()
+    {
+        return $this->boardStatus;
+    }
+
+    /**
+     * @param string $boardStatus
+     */
+    public function setBoardStatus($boardStatus)
+    {
+        $this->boardStatus = $boardStatus;
+    }
 
 }

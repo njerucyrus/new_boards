@@ -8,5 +8,6 @@
 require_once __DIR__.'/vendor/autoload.php';
 require_once __DIR__.'/src/App/Controller/BoardController.php';
 
-print_r(App\Controller\BoardController::all());
+//print_r(App\Controller\BoardController::all());
 
+print_r(\App\Controller\BoardController::all());

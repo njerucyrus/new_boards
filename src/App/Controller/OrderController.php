@@ -54,7 +54,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                                                         order_id, 
                                                         board_id,
                                                         amount,
-                                                        status,
+                                                        boardStatus,
                                                         order_date
                                                     )
                                                     VALUES
@@ -62,14 +62,14 @@ class OrderController extends ComplexQuery implements CrudInterface
                                                         :order_no,
                                                         :board_id,
                                                         :amount,
-                                                        :status,
+                                                        :boardStatus,
                                                         :order_date
                                                     )");
 
             $stmt->bindParam(':order_no', $orderNo);
             $stmt->bindParam(':board_id', $boardId);
             $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':boardStatus', $status);
             $stmt->bindParam(':order_date', $date);
 
             $stmt->execute();
@@ -103,7 +103,7 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt = $conn->prepare("UPDATE orders SET 
                                                     board_id=:board_id,
                                                     amount=:amount,
-                                                    status=:status,
+                                                    boardStatus=:boardStatus,
                                                     order_date=:order_date
                                                   WHERE
                                                         id=:id
@@ -112,7 +112,7 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':board_id', $boardId);
             $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':boardStatus', $status);
             $stmt->bindParam(':order_date', $date);
             $stmt->execute();
             $db->closeConnection();
@@ -192,7 +192,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                     "order_no" => $row['order_no'],
                     "board_id" => $row['board_id'],
                     "amount" => $row['amount'],
-                    "status" => $row['status'],
+                    "boardStatus" => $row['boardStatus'],
                     "order_date" => $row['order_date']
                 );
 
@@ -229,7 +229,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                             "order_no" => $row['order_no'],
                             "board_id" => $row['board_id'],
                             "amount" => $row['amount'],
-                            "status" => $row['status'],
+                            "boardStatus" => $row['boardStatus'],
                             "order_date" => $row['order_date']
                         );
                         $orders[] = $order;
