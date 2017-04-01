@@ -9,7 +9,7 @@
 namespace App\Api;
 
 
-class REST
+abstract class REST
 {
 
 }

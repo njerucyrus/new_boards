@@ -17,13 +17,13 @@ interface CrudInterface
 {
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function create();
 
     /**
      * @param $id
-     * @return mixed
+     * @return bool
      */
     public function update($id);
 

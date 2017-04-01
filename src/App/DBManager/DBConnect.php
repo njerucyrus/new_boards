@@ -67,4 +67,3 @@ class DBConnect
 
 $db = new DBConnect();
 $conn = $db->connect();
-

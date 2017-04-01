@@ -37,7 +37,7 @@ class Auth
 
             if ($stmt->rowCount() == 1) {
 
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
                 if (password_verify($password, $row['password'])) {
                     return true;
                 } else {

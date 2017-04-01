@@ -33,7 +33,7 @@
                 </form>
             </div>
             <?php
-            $boards = \Controller\BoardController::all();
+            $boards = \App\Controller\BoardController::all();
             if (!empty($boards)) {
                 foreach ($boards as $board) {
                     ?>

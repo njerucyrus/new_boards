@@ -7,11 +7,10 @@
  */
 namespace App\Controller;
 
-require_once __DIR__.'/../DBManager/DBConnect.php';
-
 use App\AppInterface\CrudInterface;
 use App\DBManager\ComplexQuery;
 use App\Entity\Board;
+
 
 /**
  * Class BoardController
@@ -246,7 +245,7 @@ class BoardController extends ComplexQuery implements CrudInterface
                     "width" => $row['width'],
                     "height" => $row['height'],
                     "lat" => $row['lat'],
-                    "lgn" => $row['lng'],
+                    "lgn" => $row['lgn'],
                     "town" => $row['town'],
                     "location" => $row['location'],
                     "board_type" => $row['board_type'],
@@ -301,7 +300,7 @@ class BoardController extends ComplexQuery implements CrudInterface
                             "image" => $row['image'],
                             "board_status" => $row['board_status']
                         );
-                        $boards[]=$board;
+                        $boards[] = $board;
                     }
                 }
                 $db->closeConnection();
@@ -319,5 +318,43 @@ class BoardController extends ComplexQuery implements CrudInterface
         }
 
     }
+
+    public function getBoardObject($id)
+    {
+        global $conn, $db;
+        try {
+
+            $stmt = $conn->prepare("SELECT * FROM boards WHERE id=:id");
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                $this->board->setId($row['id']);
+                $this->board->setBoardCode($row['board_code']);
+                $this->board->setWidth($row['width']);
+                $this->board->setHeight($row['height']);
+                $this->board->setLat($row['lat']);
+                $this->board->setLgn($row['lgn']);
+                $this->board->setTown($row['town']);
+                $this->board->setLocation($row['location']);
+                $this->board->setBoardType($row['board_type']);
+                $this->board->setPrice($row['price']);
+                $this->board->setOwnedBy($row['owned_by']);
+                $this->board->setSeenBy($row['seen_by']);
+                $this->board->setWeeklyImpression($row['weekly_impressions']);
+                $this->board->setImage($row['image']);
+                $this->board->setBoardStatus($row['board_status']);
+            }
+            $db->closeConnection();
+            return $this->board;
+
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
 
 }

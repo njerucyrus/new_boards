@@ -14,7 +14,7 @@ class ComplexQuery
 
     /**
      * @param $table = database table
-     * @param $fields = array table columns
+     * @param $tableColumns = array table columns
      * @param $options = array($key=>$value), $key is the
      * name of table column this parameter is used for
      * constriction of the sql query condition
@@ -24,7 +24,7 @@ class ComplexQuery
      * order_by key is an array of columns used to order your
      * results eg order_by =>array("column1", column2")
      */
-    public function customFilter($table, $fields, $options)
+    public function customFilter($table, $tableColumns, $options)
     {
         global $conn;
 
@@ -51,7 +51,7 @@ class ComplexQuery
         unset($options['limit']);
         unset($options['meta']);
 
-        if (is_array($fields) and is_array($options)) {
+        if (is_array($tableColumns) and is_array($options)) {
 
 
             $new_options_array = array();
@@ -64,38 +64,37 @@ class ComplexQuery
             } else {
                 $order_by_string = '';
                 $limit_string = '';
-                if($order_by != ''){
-                    $order_by_string = 'ORDER BY '.$order_by;
+                if ($order_by != '') {
+                    $order_by_string = 'ORDER BY ' . $order_by;
                 }
 
-                if($limit != ''){
-                    $limit_string = 'LIMIT '.$limit;
+                if ($limit != '') {
+                    $limit_string = 'LIMIT ' . $limit;
                 }
 
-                $extras = $order_by_string." ". "".$meta." ". $limit_string;
+                $extras = $order_by_string . " " . "" . $meta . " " . $limit_string;
 
                 $sql_condition_string = rtrim(implode(' AND ', $new_options_array), ',');
-                $sql_condition_string .= " ".$extras;
+                $sql_condition_string .= " " . $extras;
 
             }
-            $fields = empty($fields) ? '*' : rtrim(implode(',', $fields), ',');
+            $tableColumns = empty($tableColumns) ? '*' : rtrim(implode(',', $tableColumns), ',');
 
 
             try {
 
-                $stmt = $conn->prepare("SELECT $fields FROM $table WHERE $sql_condition_string");
+                $stmt = $conn->prepare("SELECT $tableColumns FROM $table WHERE $sql_condition_string");
 
                 $stmt->execute();
 
-                if ($stmt->rowCount() > 0){
+                if ($stmt->rowCount() > 0) {
                     $results = array();
-                    while($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+                    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                         $results[] = $row;
-                   }
-                   return $results;
+                    }
+                    return $results;
 
-                }
-                else{
+                } else {
                     return [];
                 }
 
@@ -106,5 +105,56 @@ class ComplexQuery
 
         }
         return true;
+    }
+
+    public static function search($table, $tableColumns, $searchText)
+    {
+
+        global $db, $conn;
+        $condition = '';
+        for ($i = 0; $i < sizeof($tableColumns) - 1; $i++) {
+            $condition .= $tableColumns[$i] . " LIKE '%" . $searchText . "%' OR ";
+        }
+        $condition .= $tableColumns[$i] . " LIKE '%" . $searchText . "%'";
+
+        try {
+
+            $stmt = $conn->prepare("SELECT * FROM $table WHERE $condition");
+
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $boards = array();
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    if (!empty($row)) {
+                        $board = array(
+                            "id" => $row['id'],
+                            "board_code" => $row['board_code'],
+                            "width" => $row['width'],
+                            "height" => $row['height'],
+                            "lat" => $row['lat'],
+                            "lgn" => $row['lgn'],
+                            "town" => $row['town'],
+                            "location" => $row['location'],
+                            "board_type" => $row['board_type'],
+                            "price" => $row['price'],
+                            "owned_by" => $row['owned_by'],
+                            "seen_by" => $row['seen_by'],
+                            "weekly_impressions" => $row['weekly_impressions'],
+                            "image" => $row['image'],
+                            "board_status" => $row['board_status']
+                        );
+                        $boards[] = $board;
+                    }
+                }
+                $db->closeConnection();
+                return $boards;
+            } else {
+                return [];
+            }
+        } catch (\PDOException $exception) {
+            echo $exception->getMessage();
+            return null;
+        }
+
     }
 }

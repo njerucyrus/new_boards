@@ -8,7 +8,8 @@
 
 namespace App\Controller;
 
-require_once __DIR__.'/../../../vendor/autoload.php';
+require_once __DIR__.'/../DBManager/DBConnect.php';
+
 use App\AppInterface\CrudInterface;
 use App\Entity\User;
 use App\DBManager\ComplexQuery;

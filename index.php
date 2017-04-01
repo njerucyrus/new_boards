@@ -5,9 +5,20 @@
  * Date: 3/28/17
  * Time: 1:57 AM
  */
-require_once __DIR__.'/vendor/autoload.php';
+require_once 'vendor/autoload.php';
 require_once __DIR__.'/src/App/Controller/BoardController.php';
+require_once __DIR__.'/src/App/Controller/OrderController.php';
 
-//print_r(App\Controller\BoardController::all());
+//include __DIR__.'/src/templates/board_list.php';
+//////print_r(App\Controller\BoardController::all());
+////
+////print_r(\App\Controller\BoardController::all());
+////echo "***************************************".PHP_EOL;
+////print_r(\App\Controller\OrderController::all());
+//
+$bc = new \App\Controller\BoardController(new \App\Entity\Board());
+$table = 'boards';
+$tableColumns = array('location', 'town', 'owned_by', 'board_code');
 
-print_r(\App\Controller\BoardController::all());
+$board = \App\Controller\BoardController::search($table, $tableColumns, "hudutech");
+print_r($board);

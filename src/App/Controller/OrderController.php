@@ -6,16 +6,12 @@
  * Time: 10:42 PM
  */
 
-namespace Controller;
+namespace App\Controller;
 
-require_once __DIR__ . '/../AppInterface/CrudInterface.php';
-require_once __DIR__ . '/../Entity/Order.php';
-require_once __DIR__ . '/../DBManager/DBConnect.php';
-require_once __DIR__ . '/../DBManager/ComplexQuery.php';
-
-use AppInterface\CrudInterface;
-use Entity\Order;
-use DBManager\ComplexQuery;
+require_once __DIR__.'/../DBManager/DBConnect.php';
+use App\AppInterface\CrudInterface;
+use App\Entity\Order;
+use App\DBManager\ComplexQuery;
 
 /**
  * Class OrderController
@@ -54,7 +50,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                                                         order_id, 
                                                         board_id,
                                                         amount,
-                                                        boardStatus,
+                                                        status,
                                                         order_date
                                                     )
                                                     VALUES
@@ -62,14 +58,14 @@ class OrderController extends ComplexQuery implements CrudInterface
                                                         :order_no,
                                                         :board_id,
                                                         :amount,
-                                                        :boardStatus,
+                                                        :status,
                                                         :order_date
                                                     )");
 
             $stmt->bindParam(':order_no', $orderNo);
             $stmt->bindParam(':board_id', $boardId);
             $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':boardStatus', $status);
+            $stmt->bindParam(':status', $status);
             $stmt->bindParam(':order_date', $date);
 
             $stmt->execute();
@@ -103,7 +99,7 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt = $conn->prepare("UPDATE orders SET 
                                                     board_id=:board_id,
                                                     amount=:amount,
-                                                    boardStatus=:boardStatus,
+                                                    status=:status,
                                                     order_date=:order_date
                                                   WHERE
                                                         id=:id
@@ -112,7 +108,7 @@ class OrderController extends ComplexQuery implements CrudInterface
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':board_id', $boardId);
             $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':boardStatus', $status);
+            $stmt->bindParam(':status', $status);
             $stmt->bindParam(':order_date', $date);
             $stmt->execute();
             $db->closeConnection();
@@ -192,7 +188,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                     "order_no" => $row['order_no'],
                     "board_id" => $row['board_id'],
                     "amount" => $row['amount'],
-                    "boardStatus" => $row['boardStatus'],
+                    "status" => $row['status'],
                     "order_date" => $row['order_date']
                 );
 
@@ -229,7 +225,7 @@ class OrderController extends ComplexQuery implements CrudInterface
                             "order_no" => $row['order_no'],
                             "board_id" => $row['board_id'],
                             "amount" => $row['amount'],
-                            "boardStatus" => $row['boardStatus'],
+                            "status" => $row['status'],
                             "order_date" => $row['order_date']
                         );
                         $orders[] = $order;

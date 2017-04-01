@@ -13,6 +13,10 @@ class Board
 {
 
     /**
+     * @var int
+     */
+    private $id;
+    /**
      * @var string
      */
     private $boardCode;
@@ -69,6 +73,22 @@ class Board
      * @var string
      */
     private $boardStatus;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
      * @return string
