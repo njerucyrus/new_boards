@@ -107,15 +107,23 @@ class ComplexQuery
         return true;
     }
 
-    public static function search($table, $tableColumns, $searchText)
+    /**
+     * @param $table
+     * @param array $tableColumns
+     * @param $searchText
+     * @return array|null
+     */
+    public static function search($table, array $tableColumns, $searchText)
     {
 
         global $db, $conn;
+
         $condition = '';
         for ($i = 0; $i < sizeof($tableColumns) - 1; $i++) {
             $condition .= $tableColumns[$i] . " LIKE '%" . $searchText . "%' OR ";
         }
         $condition .= $tableColumns[$i] . " LIKE '%" . $searchText . "%'";
+
 
         try {
 
@@ -151,10 +159,13 @@ class ComplexQuery
             } else {
                 return [];
             }
+
+
         } catch (\PDOException $exception) {
             echo $exception->getMessage();
             return null;
         }
+
 
     }
 }

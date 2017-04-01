@@ -18,7 +18,8 @@ require_once __DIR__.'/src/App/Controller/OrderController.php';
 //
 $bc = new \App\Controller\BoardController(new \App\Entity\Board());
 $table = 'boards';
-$tableColumns = array('location', 'town', 'owned_by', 'board_code');
+$tableColumns = ['location', 'town', 'owned_by', 'board_code'];
+$search_text = 'hudutech';
 
-$board = \App\Controller\BoardController::search($table, $tableColumns, "hudutech");
-print_r($board);
+$board = \App\Controller\BoardController::search($table, $tableColumns, $search_text);
+print_r(json_encode($board));
